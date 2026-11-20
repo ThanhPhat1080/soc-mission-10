@@ -98,24 +98,74 @@
   let saved = null;
   try { saved = localStorage.getItem('dance.face'); } catch (e) { /* ignore */ }
   if (saved) setMainFace(saved); else probeAssetFace();
+  // ---- Crop modal: kéo để dời, kéo thanh trượt / cuộn chuột / chụm 2 ngón để zoom ----
+  const cropEl = document.createElement('div');
+  cropEl.className = 'crop-modal'; cropEl.hidden = true;
+  cropEl.innerHTML = '<div class="crop-box" role="dialog" aria-label="Cắt ảnh khuôn mặt">' +
+    '<div class="crop-title">Đưa khuôn mặt vào khung tròn</div>' +
+    '<div class="crop-stage" id="cropStage"><canvas id="cropCv" width="320" height="320"></canvas><div class="crop-ring"></div></div>' +
+    '<input id="cropZoom" type="range" min="0" max="100" value="0" aria-label="Thu phóng">' +
+    '<div class="crop-hint">Kéo ảnh để di chuyển · Kéo thanh trượt hoặc cuộn chuột để phóng to</div>' +
+    '<div class="crop-actions"><button class="btn ghost" id="cropCancel">Hủy</button><button class="btn" id="cropOk">✔ Dùng ảnh này</button></div></div>';
+  document.body.appendChild(cropEl);
+  const cv = cropEl.querySelector('#cropCv'), cx = cv.getContext('2d'), zoomEl = cropEl.querySelector('#cropZoom');
+  const CS = 320;
+  let cImg = null, base = 1, zoom = 1, ox = 0, oy = 0;
+  function clampPos() {
+    const w = cImg.width * base * zoom, h = cImg.height * base * zoom;
+    ox = Math.min(0, Math.max(CS - w, ox)); oy = Math.min(0, Math.max(CS - h, oy));
+  }
+  function drawCrop() {
+    cx.fillStyle = '#222'; cx.fillRect(0, 0, CS, CS);
+    cx.drawImage(cImg, ox, oy, cImg.width * base * zoom, cImg.height * base * zoom);
+  }
+  function setZoom(z, px = CS / 2, py = CS / 2) {
+    z = Math.min(4, Math.max(1, z));
+    const k = z / zoom; ox = px - (px - ox) * k; oy = py - (py - oy) * k; zoom = z;
+    zoomEl.value = String(((zoom - 1) / 3) * 100); clampPos(); drawCrop();
+  }
+  function openCrop(src) {
+    const img = new Image();
+    img.onload = () => {
+      cImg = img; base = CS / Math.min(img.width, img.height); zoom = 1;
+      ox = (CS - img.width * base) / 2; oy = (CS - img.height * base) / 2;
+      zoomEl.value = '0'; clampPos(); drawCrop(); cropEl.hidden = false;
+    };
+    img.src = src;
+  }
+  const pts = new Map(); let lastD = 0;
+  const rel = (e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * CS / r.width, (e.clientY - r.top) * CS / r.height]; };
+  cv.addEventListener('pointerdown', (e) => { cv.setPointerCapture(e.pointerId); pts.set(e.pointerId, rel(e)); lastD = 0; });
+  cv.addEventListener('pointermove', (e) => {
+    if (!pts.has(e.pointerId)) return;
+    const prev = pts.get(e.pointerId), cur = rel(e); pts.set(e.pointerId, cur);
+    if (pts.size === 1) { ox += cur[0] - prev[0]; oy += cur[1] - prev[1]; clampPos(); drawCrop(); }
+    else if (pts.size === 2) {
+      const [p, q] = [...pts.values()], d = Math.hypot(p[0] - q[0], p[1] - q[1]);
+      if (lastD) setZoom(zoom * d / lastD, (p[0] + q[0]) / 2, (p[1] + q[1]) / 2);
+      lastD = d;
+    }
+  });
+  const endPtr = (e) => { pts.delete(e.pointerId); lastD = 0; };
+  cv.addEventListener('pointerup', endPtr); cv.addEventListener('pointercancel', endPtr);
+  cv.addEventListener('wheel', (e) => { e.preventDefault(); const [x, y] = rel(e); setZoom(zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08), x, y); }, { passive: false });
+  zoomEl.addEventListener('input', () => setZoom(1 + zoomEl.value / 100 * 3));
+  const closeCrop = () => { cropEl.hidden = true; cImg = null; };
+  cropEl.querySelector('#cropCancel').addEventListener('click', closeCrop);
+  cropEl.querySelector('#cropOk').addEventListener('click', () => {
+    if (!cImg) return;
+    const url = cv.toDataURL('image/jpeg', 0.9);
+    setMainFace(url);
+    try { localStorage.setItem('dance.face', url); } catch (err) { /* ignore */ }
+    closeCrop();
+  });
+  document.addEventListener('keydown', (e) => { if (!cropEl.hidden && e.key === 'Escape') { e.stopPropagation(); closeCrop(); } }, true);
   document.getElementById('faceInput').addEventListener('change', (e) => {
     const file = e.target.files && e.target.files[0];
+    e.target.value = '';
     if (!file) return;
     const r = new FileReader();
-    r.onload = () => {
-      // Downscale to keep localStorage small
-      const img = new Image();
-      img.onload = () => {
-        const c = document.createElement('canvas');
-        const s = 320, k = Math.min(img.width, img.height);
-        c.width = c.height = s;
-        c.getContext('2d').drawImage(img, (img.width - k) / 2, (img.height - k) / 2, k, k, 0, 0, s, s);
-        const url = c.toDataURL('image/jpeg', 0.88);
-        setMainFace(url);
-        try { localStorage.setItem('dance.face', url); } catch (err) { /* ignore */ }
-      };
-      img.src = r.result;
-    };
+    r.onload = () => openCrop(r.result);
     r.readAsDataURL(file);
   });
   document.getElementById('faceReset').addEventListener('click', () => {

@@ -255,6 +255,11 @@ function astro(kind){
   const badge = kind === "soc"
     ? `<text x="120" y="210" text-anchor="middle" font-family="Baloo 2, Nunito, sans-serif" font-weight="800" font-size="26" fill="${INK}">10</text>`
     : `<path d="M120 214 C 102 202, 100 188, 110 185 C 116 183, 120 188, 120 191 C 120 188, 124 183, 130 185 C 140 188, 138 202, 120 214 Z" fill="${C.accent}" stroke="${INK}" stroke-width="3"/>`;
+  const NAMES = {giahan:["Gia Hân","#FF3D87","#fff"], hamy:["Hà My","#FFC2D6",INK]};
+  const tag = NAMES[kind] ? `<g class="nm"><path d="M104 -4 L112 8 L120 -4 Z" fill="${NAMES[kind][1]}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+  <rect x="52" y="-32" width="120" height="32" rx="16" fill="${NAMES[kind][1]}" stroke="${INK}" stroke-width="4"/>
+  <path d="M106 -6 L118 -6" stroke="${NAMES[kind][1]}" stroke-width="6"/>
+  <text x="112" y="-9" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-weight="800" font-size="22" fill="${NAMES[kind][2]}">${NAMES[kind][0]}</text></g>` : "";
   const top = kind === "soc"
     ? `<g class="ant"><path d="M120 18 L120 -6" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>
        <path d="M120 -24 L125 -13 L137 -12 L128 -4 L131 8 L120 2 L109 8 L112 -4 L103 -12 L115 -13 Z" fill="#FFC83D" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/></g>`
@@ -272,7 +277,7 @@ function astro(kind){
     <path d="M-4 -4 Q 0 -6 4 -4" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>
   </g>`;
   const label = {soc:"Phi hành gia chibi Gia Huy vẫy tay", giahan:"Phi hành gia Gia Hân vẫy tay", hamy:"Phi hành gia Hà My vẫy tay"}[kind];
-  return `<svg class="astro" viewBox="0 -30 240 320" role="img" aria-label="${label}">
+  return `<svg class="astro" viewBox="0 -40 240 330" role="img" aria-label="${label}">
   <defs>
     <radialGradient id="${k}v" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#4466E0"/><stop offset="1" stop-color="#101A4E"/></radialGradient>
     <clipPath id="${k}c"><circle cx="120" cy="106" r="66"/></clipPath>
@@ -303,6 +308,7 @@ function astro(kind){
   <path d="M70 84 C 78 64, 96 52, 116 50" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".55"/>
   <circle cx="166" cy="140" r="5" fill="#fff" opacity=".45"/>
   ${bow}
+  ${tag}
 </svg>`;
 }
 

@@ -1,0 +1,10 @@
+- Câu 1: bạn đã làm. Duyệt
+- Câu 2: bạn đã làm. Duyệt
+- Câu 3: bạn đã làm. Duyệt
+- Câu 4: bạn đã làm. Duyệt
+- câu 5:  <Một câu hỏi tiếng anh có thể dành cho bé 5 tuổi>
+- Câu 6: Một con cua đỏ dài 15cm chạy đua với con cua xanh dài 8cm. Hỏi con cua nào chạy về đích trước?
+- Câu 7: Bố mẹ có sáu người con trai, mỗi người con trai có một em gái. Hỏi gia đình đó có bao nhiêu người?
+- Câu 8: <Một câu hỏi tiếng anh 5-10 tuổi>
+- Câu 9: Đố vui đuổi hình bắt chữ: "Thỏ đế" (Nhờ bạn tạo hình "thỏ" + "Đế")
+- Câu 10: <Nhờ bạn đố câu gì có đáp án là số 10>

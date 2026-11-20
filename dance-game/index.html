@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vũ Điệu Mũ Chong Chóng</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div class="floor"></div>
+  <div class="bunting"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="balloon" style="left:3%;top:22%;background:#ff5ea8"></div>
+  <div class="balloon" style="left:7%;top:30%;background:#4dc3ff;animation-delay:-1.5s"></div>
+  <div class="balloon" style="right:7%;top:30%;background:#ffd84d;animation-delay:-.8s"></div>
+  <div class="balloon" style="right:3%;top:22%;background:#5eea8a;animation-delay:-2.4s"></div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-box">Điểm <b id="score">0</b></div>
+    <div class="hud-box">Combo <b id="combo">0</b></div>
+    <div id="timer">2:00</div>
+    <div class="hud-box">Cấp <b id="level">1</b></div>
+    <div class="hud-box small">P <b id="cntP">0</b> · G <b id="cntG">0</b> · B <b id="cntB">0</b> · M <b id="cntM">0</b></div>
+  </div>
+
+  <!-- Dancers: backups first so they sit behind -->
+  <div id="crew"></div>
+
+  <div id="judge"></div>
+
+  <!-- Arrow sequence + beat bar -->
+  <div id="panel">
+    <div id="arrows"></div>
+    <div id="beatbar">
+      <div id="ticks"></div>
+      <div id="zone-bad"></div>
+      <div id="zone-great"></div>
+      <div id="zone-perfect"></div>
+      <div id="marker"></div>
+    </div>
+    <div class="hint">Gõ các mũi tên theo thứ tự ← ↑ → ↓ rồi bấm <kbd>Space</kbd> đúng lúc vạch chạy vào ô sáng nhấp nháy</div>
+  </div>
+
+  <!-- Menu -->
+  <div id="menu">
+    <div class="card">
+      <h1>Vũ Điệu Mũ Chong Chóng</h1>
+      <div id="result" hidden>
+        <div class="res-title">Kết thúc màn chơi!</div>
+        <div class="res-score"><b id="resScore">0</b> điểm</div>
+        <div id="resDetail" class="small"></div>
+      </div>
+      <p>Gõ <b>các phím mũi tên</b> giống trên màn hình, rồi bấm <kbd>Space</kbd> khi vạch chạy tới ô sáng nhấp nháy. Mỗi màn chơi khoảng 2 phút.</p>
+      <p class="rules"><span class="p">PERFECT +3</span> <span class="g">GREAT +2</span> <span class="b">BAD +1</span> <span class="m">MISS 0</span></p>
+      <p class="small">Gõ sai hoặc trễ: cả nhóm chỉ nhún nhún, không có điểm, chờ lượt sau.</p>
+      <div class="speed">
+        Nhân vật chính:
+        <button class="btn gd" data-gender="boy">👦 Nam</button>
+        <button class="btn gd" data-gender="girl">👧 Nữ</button>
+      </div>
+      <label class="btn ghost">📷 Chọn ảnh khuôn mặt
+        <input id="faceInput" type="file" accept="image/*" hidden>
+      </label>
+      <button id="faceReset" class="btn ghost">Ảnh mặc định</button>
+      <div class="speed">
+        Độ khó:
+        <button class="btn df" data-max="5" title="Tối đa 5 mũi tên">Bắt đầu</button>
+        <button class="btn df" data-max="7" title="Tối đa 7 mũi tên">Dễ</button>
+        <button class="btn df" data-max="10" title="Tối đa 10 mũi tên">Vừa</button>
+        <button class="btn df" data-max="12" title="Tối đa 12 mũi tên">Khó</button>
+      </div>
+      <div class="speed">
+        Tốc độ:
+        <button class="btn sp" data-bpm="90">Chậm</button>
+        <button class="btn sp on" data-bpm="110">Vừa</button>
+        <button class="btn sp" data-bpm="130">Nhanh</button>
+      </div>
+      <button id="start" class="btn big">▶ Bắt đầu</button>
+      <p class="small">Bấm <kbd>Esc</kbd> để dừng</p>
+    </div>
+  </div>
+</div>
+<script src="game.js"></script>
+
+<!-- Nút về menu chính -->
+<style>
+.soc-home{position:fixed;z-index:9999;top:calc(12px + env(safe-area-inset-top,0px));left:calc(12px + env(safe-area-inset-left,0px));
+  display:inline-flex;align-items:center;gap:6px;font:800 15px/1 "Nunito",system-ui,sans-serif;color:#1B2350;background:#FFF3D1;
+  border:2.5px solid #1B2350;border-radius:999px;padding:8px 14px 8px 10px;box-shadow:0 3px 0 #1B2350;text-decoration:none;opacity:.85;transition:opacity .2s,transform .15s}
+.soc-home:hover,.soc-home:focus-visible{opacity:1;transform:translateY(-2px);outline:none}
+.soc-home:active{transform:translateY(2px);box-shadow:0 1px 0 #1B2350}
+.soc-home svg{width:18px;height:18px;flex:none}
+</style>
+<a class="soc-home" href="../index.html" aria-label="Về menu chính"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9.5h4.5V15h3v4.5H18V10" fill="#FFC83D" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>Về menu</a>
+</body>
+</html>

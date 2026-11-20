@@ -987,7 +987,7 @@ function runFinale(){
     // nhỏ nhạc nền trong lúc hát Happy Birthday (~14 giây), rồi trả lại mức cũ
     fxStart(); setTimeout(fxEnd, 14500);
     $("#photosBtn").hidden = CONFIG.photos.length===0;
-    $("#slideBtn").hidden = !(IS_LOCAL && CONFIG.slideshowPage);
+    $("#slideBtn").hidden = !CONFIG.slideshowPage;
     $("#endActions").hidden = $("#photosBtn").hidden && $("#slideBtn").hidden;
   }, t1 + 7600);
 }

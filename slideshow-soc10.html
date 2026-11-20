@@ -105,6 +105,8 @@ body{background:radial-gradient(120% 90% at 50% 0%,#1C2A6E 0%,var(--night) 60%,#
 .buddy{position:absolute;bottom:-3cqw;right:4cqw;width:24cqw;z-index:3}
 .photo.rev .buddy{right:auto;left:4cqw}
 .photo.rev .buddy .astro{transform:scaleX(-1)}
+.buddy2{right:19cqw;width:21cqw}
+.photo.rev .buddy2{right:auto;left:19cqw}
 
 /* crew */
 .crew{display:grid;place-items:center}
@@ -184,8 +186,8 @@ let uid = 0;
 const INK = "#1B2350";
 const SUITS = {
   soc:   {suit:"#F4F6FF", pack:"#8A93B8", helm:"#FFF3D1", accent:"#FF7E6B", glove:"#FFC83D"},
-  giahan:{suit:"#FFD6E2", pack:"#E58AA6", helm:"#FFF0F5", accent:"#FF7E6B", glove:"#FFB3C7"},
-  hamy:  {suit:"#E3DBFF", pack:"#9A88E8", helm:"#F6F2FF", accent:"#A994FF", glove:"#5FE0B7"}
+  giahan:{suit:"#FFB3D0", pack:"#E0508A", helm:"#FFE0EC", accent:"#FF3D87", glove:"#FF7DB0"},
+  hamy:  {suit:"#FFE6EE", pack:"#F5BCD0", helm:"#FFF6F9", accent:"#FFA3C0", glove:"#FFD3E0"}
 };
 function socFace(){
   // Chibi Sóc age 10: voluminous wavy top swept up, short sides, ears that stick out, smiling eyes, big toothy grin.
@@ -228,7 +230,7 @@ function astro(kind){
     ? `<g class="ant"><path d="M120 18 L120 -6" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>
        <path d="M120 -24 L125 -13 L137 -12 L128 -4 L131 8 L120 2 L109 8 L112 -4 L103 -12 L115 -13 Z" fill="#FFC83D" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/></g>`
     : "";
-  const BC = {giahan:["#FF6B9A","#D9467A"], hamy:["#9B7BFF","#6E4FD8"]}[kind];
+  const BC = {giahan:["#FF3D87","#C81D6B"], hamy:["#FFB6CC","#F08BAA"]}[kind];
   const bow = kind === "soc" ? "" : `<g class="bow" transform="translate(170 30) rotate(24)">
     <path d="M-5 4 L-17 32 L-9 29 L-4 37 L3 6 Z" fill="${BC[1]}" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>
     <path d="M5 4 L17 32 L9 29 L4 37 L-3 6 Z" fill="${BC[1]}" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>
@@ -282,8 +284,8 @@ const PHOTOS = [
   {log:"Nhật ký bay · 03", cap:"Nụ cười <b>tinh nghịch</b>", sub:"Rạng rỡ nhất dải Ngân Hà.", buddy:"soc"},
   {log:"Nhật ký bay · 04", cap:"Cầm cả <b>mặt trăng</b>", sub:"Một vầng sáng nhỏ trong đôi tay bé xíu.", buddy:"hamy"},
   {log:"Nhật ký bay · 05", cap:"Bản nhạc của <b>các vì sao</b>", sub:"Những phím đàn đầu tiên vang lên.", buddy:"giahan"},
-  {log:"Nhật ký bay · 06", cap:"Chào em gái <b>bé xíu</b>", sub:"Phi hành đoàn có thêm thành viên mới.", buddy:"soc"},
-  {log:"Nhật ký bay · 07", cap:"Hai anh em <b>má hồng</b>", sub:"Tai thỏ, dâu tây và nụ cười tít mắt.", buddy:"hamy"},
+  {log:"Nhật ký bay · 06", cap:"Chào em gái <b>bé xíu</b>", sub:"Phi hành đoàn có thêm thành viên mới.", buddy:"soc", extra:"giahan"},
+  {log:"Nhật ký bay · 07", cap:"Hai anh em <b>má hồng</b>", sub:"Tai thỏ, dâu tây và nụ cười tít mắt.", buddy:"hamy", extra:"giahan"},
   {log:"Nhật ký bay · 08", cap:"Sải bước trên <b>hành tinh mới</b>", sub:"Mỗi bước chân là một chuyến phiêu lưu.", buddy:"giahan"},
   {log:"Nhật ký bay · 09", cap:"Nạp năng lượng <b>bằng kem!</b>", sub:"Cười toe toét, ngon hết sẩy.", buddy:"soc"},
   {log:"Nhật ký bay · 10", cap:"Anh trai <b>bảnh bao</b>", sub:"Diện đồ thật đẹp, nắm tay em gái.", buddy:"hamy"},
@@ -321,7 +323,7 @@ PHOTOS.forEach((p,i)=>{
       <h2 class="cap in" style="--a:up;--d:.5s">${p.cap}</h2>
       <p class="sub in" style="--a:up;--d:.7s">${p.sub}</p>
     </div>
-    <div class="buddy in" style="--a:${rev?"fromL":"fromR"};--d:1s"><div class="bob">${astro(p.buddy)}</div></div>
+    <div class="buddy in" style="--a:${rev?"fromL":"fromR"};--d:1s"><div class="bob">${astro(p.buddy)}</div></div>${p.extra?`<div class="buddy buddy2 in" style="--a:${rev?"fromL":"fromR"};--d:1.25s"><div class="bob b2">${astro(p.extra)}</div></div>`:""}
   </div>`});
 });
 scenes.push({dur:7500, burst:true, html:`
